@@ -2,8 +2,8 @@
   <div>
     <FormPlanPicker v-if="currentStepNumber === 1" @update="processStep"/>
     <FormUserDetails v-if="currentStepNumber === 2" @update="processStep"/>
-    <FormAddress v-if="currentStepNumber === 3" @update="processStep"/>
-    <FormReviewOrder v-if="currentStepNumber === 4" @update="processStep"/>
+    <FormAddress v-if="currentStepNumber === 3" :wizardData="form" @update="processStep"/>
+    <FormReviewOrder v-if="currentStepNumber === 4" :wizardData="form" @update="processStep"/>
 
     <div class="progress-bar">
       <div :style="`width: ${progress}%;`"></div>
@@ -20,6 +20,7 @@
       <button
         @click="goNext"
         class="btn"
+        :disabled="!moveAllowed"
       >Next</button>
     </div>
 
@@ -43,6 +44,7 @@ export default {
   data() {
     return {
       currentStepNumber: 1,
+      moveAllowed: false,
       length: 4,
       form: {
         plan: null,
@@ -64,12 +66,14 @@ export default {
   methods: {
     processStep(stepData) {
       Object.assign(this.form, stepData);
+      this.moveAllowed = true;
     },
     goBack() {
       this.currentStepNumber--;
     },
     goNext() {
       this.currentStepNumber++;
+      this.moveAllowed = false;
     }
   }
 };

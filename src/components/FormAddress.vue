@@ -23,39 +23,44 @@
 </template>
 
 <script>
-  import {required} from 'vuelidate/lib/validators'
-  export default {
-    data () {
-      return {
-        form: {
-          address: null,
-          recipient: null
-        }
-      }
-    },
-    validations: {
+import { required } from "vuelidate/lib/validators";
+export default {
+  props: {
+    wizardData: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
       form: {
-        address: {
-          required
-        },
-        recipient: {
-          required
-        }
+        address: null,
+        recipient: this.wizardData.name
       }
-    },
-    methods : {
-      submit() {
-        if(!this.$v.$invalid) {
-          this.$emit('update',{
-            address: this.form.address,
-            recipient : this.form.recipient
-          });
-        }
+    };
+  },
+  validations: {
+    form: {
+      address: {
+        required
+      },
+      recipient: {
+        required
+      }
+    }
+  },
+  methods: {
+    submit() {
+      if (!this.$v.$invalid) {
+        this.$emit("update", {
+          address: this.form.address,
+          recipient: this.form.recipient
+        });
       }
     }
   }
+};
 </script>
 
 <style scoped>
-
 </style>
