@@ -36,43 +36,50 @@
 </template>
 
 <script>
-  import {required} from 'vuelidate/lib/validators'
+import { required } from "vuelidate/lib/validators";
 
-  export default {
-    data() {
-      return {
-        plans: [
-          {
-            price: 19,
-            weight: '250g',
-            name: 'The Single',
-            description: 'One bag of freshly roasted coffee beans delivered to your house every month'
-          },
-          {
-            price: 29,
-            weight: '500g',
-            name: 'The Curious',
-            description: 'Two different types of freshly roasted coffee every month'
-          },
-          {
-            price: 49,
-            weight: '1kg',
-            name: 'The Addict',
-            description: 'Two bags of two different types of freshly roasted coffee every month.'
-          }
-        ],
-        selectedPlan: null
-      }
-    },
-    validations: {
-      selectedPlan: {
-        required
-      }
-    },
-    methods: {
-      pickPlan (plan) {
-        this.selectedPlan = plan
-      }
+export default {
+  data() {
+    return {
+      plans: [
+        {
+          price: 19,
+          weight: "250g",
+          name: "The Single",
+          description:
+            "One bag of freshly roasted coffee beans delivered to your house every month"
+        },
+        {
+          price: 29,
+          weight: "500g",
+          name: "The Curious",
+          description:
+            "Two different types of freshly roasted coffee every month"
+        },
+        {
+          price: 49,
+          weight: "1kg",
+          name: "The Addict",
+          description:
+            "Two bags of two different types of freshly roasted coffee every month."
+        }
+      ],
+      selectedPlan: null
+    };
+  },
+  validations: {
+    selectedPlan: {
+      required
+    }
+  },
+  methods: {
+    pickPlan(plan) {
+      this.selectedPlan = plan;
+      //Emit the event
+      this.$emit("update", {
+        plan: this.selectedPlan
+      });
     }
   }
+};
 </script>
