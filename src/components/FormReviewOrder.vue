@@ -90,6 +90,7 @@ export default {
       }
     };
   },
+  validations: {},
   methods: {
     submit() {
       this.$emit("update", {
@@ -97,7 +98,7 @@ export default {
           chocolate: this.form.chocolate,
           otherTreat: this.form.otherTreat
         },
-        valid : true
+        valid: true
       });
     }
   },

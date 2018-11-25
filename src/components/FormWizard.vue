@@ -1,9 +1,13 @@
 <template>
   <div>
+  <div v-if="!orderDone">
     <keep-alive>
       <component 
+      ref="currentStep"
       :is="currentStep"
-      @update="processStep" 
+      @update="processStep"
+      :isLastStep="isLastStep"
+      :wizardProgress="wizardProgress"
       :wizardData="form">
     </component>
     </keep-alive>
@@ -25,13 +29,20 @@
       >Back
       </button>
       <button
-        @click="goNext"
+        @click="nextButtonAction"
         class="btn"
         :disabled="!moveAllowed"
-      >Next</button>
+      >{{isLastStep ? 'Confirm Order' : 'Next'}}</button>
     </div>
-
-    <pre><code>{{form}}</code></pre>
+    <!-- <pre><code>{{form}}</code></pre> -->
+  </div>
+  <div v-else>
+    <h1 class="title">Thank you !!</h1>
+    <h2 class="subtitle">We look forward to shipping your first box!</h2>
+    <p class="text-center">
+      <a href="https://github.com/instillhubdev" target="_blank" class="btn">Go to InstillHubDev</a>
+    </p>
+  </div>
   </div>
 </template>
 
@@ -40,6 +51,7 @@ import FormPlanPicker from "./FormPlanPicker";
 import FormUserDetails from "./FormUserDetails";
 import FormAddress from "./FormAddress";
 import FormReviewOrder from "./FormReviewOrder";
+import { postFormToDB } from "../api";
 export default {
   name: "FormWizard",
   components: {
@@ -52,6 +64,7 @@ export default {
     return {
       currentStepNumber: 1,
       moveAllowed: false,
+      orderDone: false,
       form: {
         plan: null,
         email: null,
@@ -71,6 +84,12 @@ export default {
     };
   },
   computed: {
+    isLastStep() {
+      return this.currentStepNumber === this.length;
+    },
+    wizardProgress() {
+      return this.currentStepNumber <= this.length;
+    },
     currentStep() {
       return this.steps[this.currentStepNumber - 1];
     },
@@ -82,6 +101,24 @@ export default {
     }
   },
   methods: {
+    nextButtonAction() {
+      if (this.isLastStep) {
+        this.submitOrder();
+      } else {
+        this.goNext();
+      }
+    },
+    async submitOrder() {
+      //api call to server
+      try {
+        await postFormToDB(this.form);
+        console.log(`form submitted ${this.form}`);
+        this.currentStepNumber++;
+        this.orderDone = true;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     processStep(step) {
       Object.assign(this.form, step.data);
       this.moveAllowed = step.valid;
@@ -92,7 +129,10 @@ export default {
     },
     goNext() {
       this.currentStepNumber++;
-      this.moveAllowed = false;
+      this.$nextTick(() => {
+        this.moveAllowed = !this.$refs.currentStep.$v.$invalid;
+        this.$refs.currentStep.submit();
+      });
     }
   }
 };
