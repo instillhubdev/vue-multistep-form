@@ -66,7 +66,7 @@ export default {
         "FormPlanPicker",
         "FormUserDetails",
         "FormAddress",
-        "FormPlanPicker"
+        "FormReviewOrder"
       ]
     };
   },
@@ -82,12 +82,13 @@ export default {
     }
   },
   methods: {
-    processStep(stepData) {
-      Object.assign(this.form, stepData);
-      this.moveAllowed = true;
+    processStep(step) {
+      Object.assign(this.form, step.data);
+      this.moveAllowed = step.valid;
     },
     goBack() {
       this.currentStepNumber--;
+      this.moveAllowed = true;
     },
     goNext() {
       this.currentStepNumber++;

@@ -93,8 +93,11 @@ export default {
   methods: {
     submit() {
       this.$emit("update", {
-        chocolate: this.form.chocolate,
-        otherTreat: this.form.otherTreat
+        data: {
+          chocolate: this.form.chocolate,
+          otherTreat: this.form.otherTreat
+        },
+        valid : true
       });
     }
   },
@@ -104,7 +107,7 @@ export default {
       if (this.form.chocolate) {
         total += 4;
       }
-      if(this.form.otherTreat) {
+      if (this.form.otherTreat) {
         total += 2;
       }
       return total;

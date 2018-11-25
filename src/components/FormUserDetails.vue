@@ -45,14 +45,15 @@ export default {
   },
   methods: {
     submit() {
-      //check for the validity of the user data 
-      if(!this.$v.$invalid) {
-        this.$emit("update", {
-        email: this.form.email,
-        password: this.form.password,
-        name: this.form.name
+      //check for the validity of the user data
+      this.$emit("update", {
+        data: {
+          email: this.form.email,
+          password: this.form.password,
+          name: this.form.name
+        },
+        valid : !this.$v.$invalid
       });
-      }
     }
   },
   validations: {

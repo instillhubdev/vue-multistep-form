@@ -75,9 +75,11 @@ export default {
   methods: {
     pickPlan(plan) {
       this.selectedPlan = plan;
-      //Emit the event
       this.$emit("update", {
-        plan: this.selectedPlan
+        data: {
+          plan: this.selectedPlan
+        },
+        valid: !this.$v.$invalid
       });
     }
   }
